@@ -188,6 +188,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DYNAMIC_DATATB = {
     # SLUG -> Import_PATH 
     'product'  : "apps.pages.models.Product",
+    'permohonan'  : "apps.pages.models.Permohonan",
+    'layanan'  : "apps.pages.models.Layanan",
+    'item_berkas'  : "apps.pages.models.BerkasItem",
+    'permohonan_berkas'  : "apps.pages.models.PermohonanBerkas",
+    'catatan_berkas'  : "apps.pages.models.BerkasCatatan",
 }
 ########################################
 
@@ -195,6 +200,11 @@ DYNAMIC_DATATB = {
 DYNAMIC_API = {
     # SLUG -> Import_PATH 
     'product'  : "apps.pages.models.Product",
+    'permohonan'  : "apps.pages.models.Permohonan",
+    'layanan'  : "apps.pages.models.Layanan",
+    'item_berkas'  : "apps.pages.models.BerkasItem",
+    'permohonan_berkas'  : "apps.pages.models.PermohonanBerkas",
+    'catatan_berkas'  : "apps.pages.models.BerkasCatatan",
 }
 
 REST_FRAMEWORK = {

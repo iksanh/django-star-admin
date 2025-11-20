@@ -13,3 +13,9 @@ env
 *.sqlite*
 
 .env
+
+# Ignore migrations in apps/pages
+apps/pages/migrations/
+
+# Ignore all subfolders in static
+static/*/
