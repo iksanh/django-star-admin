@@ -17,23 +17,27 @@
     <li class="nav-item {% if 'dynamic_dt' in segment %} active {% endif %}">
       <a class="nav-link" href="{% url 'dynamic_dt' %}">
         <i class="mdi mdi-table menu-icon"></i>
-        <span class="menu-title">Dynamic Tables</span>
+        <span class="menu-title">Master Data</span>
       </a>
     </li>
-
+    {% comment "This section is form api " %}
     <li class="nav-item {% if 'dynamic_api' in segment %} active {% endif %}">
       <a class="nav-link" href="{% url 'dynamic_api' %}">
         <i class="mdi mdi-server menu-icon"></i>
         <span class="menu-title">Dynamic API</span>
       </a>
     </li>
+    {% endcomment %}
 
+    {% comment "This section is for chart " %}
     <li class="nav-item {% if 'charts' in segment %} active {% endif %}">
       <a class="nav-link" href="{% url 'charts' %}">
         <i class="mdi mdi-chart-bar menu-icon"></i>
         <span class="menu-title">Charts</span>
       </a>
     </li>
+    {% endcomment %}
+    
 
     {% admin_get_menu as app_list %}
     {% if app_list %}

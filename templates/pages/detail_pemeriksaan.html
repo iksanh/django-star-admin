@@ -1,0 +1,52 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Detail Pemeriksaan {% endblock title %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Detail Pemeriksaan Berkas</h3>
+        <a href="{% url 'pemeriksaan_input' pemohon.id %}" class="btn btn-primary">
+            Edit Pemeriksaan
+        </a>
+    </div>
+
+    <div class="mb-4">
+        <h5 class="mb-1">{{ pemohon.nama_pemohon }}</h5>
+        <p class="text-muted">Layanan: {{ pemohon.layanan.nama }} | Tanggal: {{ pemohon.tanggal_permohonan }}</p>
+    </div>
+
+    {% for p in pemeriksaan_list %}
+    <div class="card shadow-sm mb-3">
+        <div class="card-header bg-dark text-white fw-bold">
+            {{ p.berkas.nama }}
+        </div>
+        <div class="card-body">
+
+            <p class="mb-1 fw-semibold">Checklist Catatan:</p>
+            <ul class="mb-3">
+                {% for cat in p.catatan.all %}
+                    <li>{{ cat.teks }}</li>
+                {% empty %}
+                    <li class="text-muted">Tidak ada catatan checklist</li>
+                {% endfor %}
+            </ul>
+
+            <p class="mb-1 fw-semibold">Catatan Tambahan:</p>
+            {% if p.catatan_baru %}
+                <div class="alert alert-info py-2 mb-0">{{ p.catatan_baru|linebreaks }}</div>
+            {% else %}
+                <p class="text-muted">Tidak ada catatan khusus</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="mt-4 d-flex justify-content-end">
+        <a href="#" class="btn btn-success btn-lg">Download PDF</a>
+    </div>
+
+</div>
+{% endblock content %}

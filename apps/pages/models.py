@@ -5,15 +5,15 @@ User = get_user_model()
 
 # Create your models here.
 
-class Product(models.Model):
+# class Product(models.Model):
     
-    id    = models.AutoField(primary_key=True)
-    name  = models.CharField(max_length = 100) 
-    info  = models.CharField(max_length = 100, default = '')
-    price = models.IntegerField(blank=True, null=True)
+#     id    = models.AutoField(primary_key=True)
+#     name  = models.CharField(max_length = 100) 
+#     info  = models.CharField(max_length = 100, default = '')
+#     price = models.IntegerField(blank=True, null=True)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 # ----------------------------------------------------------------------
@@ -40,82 +40,59 @@ class BerkasItem(models.Model):
     - Surat Pernyataan Penguasaan Fisik
     """
     nama = models.CharField(max_length=255)
-    layanan = models.ForeignKey(Layanan, on_delete=models.CASCADE, related_name="berkas_items")
+    
 
-    wajib = models.BooleanField(default=True)  # apakah wajib?
+    
 
     def __str__(self):
-        return f"{self.nama} - {self.layanan.nama}"
+        return f"{self.nama}"
 
 
 # ----------------------------------------------------------------------
-# PERMOHONAN
+# PEMOHON 
 # ----------------------------------------------------------------------
 
-class Permohonan(models.Model):
+class Pemohon(models.Model):
     """
-    Data permohonan layanan (tanpa upload file).
+    Data pemohon per permohonan layanan.
     """
     nama_pemohon = models.CharField(max_length=255)
     nik = models.CharField(max_length=50, null=True, blank=True)
+    alamat = models.TextField(null=True, blank=True)
+
     layanan = models.ForeignKey(Layanan, on_delete=models.CASCADE)
-
     tanggal_permohonan = models.DateField(auto_now_add=True)
-
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('revisi', 'Revisi'),
-        ('approved', 'Approved'),
-    ]
-
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return f"{self.nama_pemohon} - {self.layanan.nama}"
 
-
-# ----------------------------------------------------------------------
-# BERKAS PER PERMOHONAN
-# ----------------------------------------------------------------------
-
-class PermohonanBerkas(models.Model):
+class CatatanTemplate(models.Model):
     """
-    Berkas yang harus dicek (instance dari master list berkas).
-    Tidak ada file upload, hanya status dan catatan.
+    Catatan global yang dapat dipilih untuk setiap berkas.
+    Contoh: OK, Belum Ada, Lengkapi luas, Coret & paraf batas, dll.
     """
-    permohonan = models.ForeignKey(Permohonan, on_delete=models.CASCADE, related_name="berkas")
-    item = models.ForeignKey(BerkasItem, on_delete=models.CASCADE)
-
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('revisi', 'Revisi'),
-        ('approved', 'Approved'),
-    ]
-
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-
-    last_updated = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
-
-    class Meta:
-        unique_together = ('permohonan', 'item')
+    berkas = models.ForeignKey(BerkasItem, on_delete=models.CASCADE, related_name="templates")
+    teks = models.CharField(max_length=255)
+    is_global = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.item.nama} - {self.permohonan}"
+        return self.teks
 
 
-# ----------------------------------------------------------------------
-# CATATAN BERKAS
-# ----------------------------------------------------------------------
-
-class BerkasCatatan(models.Model):
+class Pemeriksaan(models.Model):
     """
-    Menampung catatan berulang pada setiap berkas.
+    Pemeriksaan berkas per pemohon.
     """
-    permohonan_berkas = models.ForeignKey(PermohonanBerkas, on_delete=models.CASCADE, related_name="catatan")
-    isi_catatan = models.TextField()
-    dibuat_oleh = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    dibuat_pada = models.DateTimeField(auto_now_add=True)
+    pemohon = models.ForeignKey(Pemohon, on_delete=models.CASCADE)
+    berkas = models.ForeignKey(BerkasItem, on_delete=models.CASCADE)
+
+    # Beberapa catatan standar (multiple select)
+    catatan = models.ManyToManyField(CatatanTemplate, blank=True)
+
+    # Catatan khusus (tidak global)
+    catatan_baru = models.TextField(blank=True, null=True)
+
+    tanggal_koreksi = models.DateField(auto_now=True)
 
     def __str__(self):
-        return f"Catatan untuk {self.permohonan_berkas.item.nama}"
+        return f"Pemeriksaan {self.pemohon.nama_pemohon} - {self.berkas.nama}"

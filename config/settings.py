@@ -186,20 +186,20 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # ### DYNAMIC_DATATB Settings ###
 DYNAMIC_DATATB = {
-    # SLUG -> Import_PATH 
-    'product'  : "apps.pages.models.Product",
-    'permohonan'  : "apps.pages.models.Permohonan",
+    # # SLUG -> Import_PATH 
+    # 'product'  : "apps.pages.models.Product",
     'layanan'  : "apps.pages.models.Layanan",
-    'item_berkas'  : "apps.pages.models.BerkasItem",
-    'permohonan_berkas'  : "apps.pages.models.PermohonanBerkas",
-    'catatan_berkas'  : "apps.pages.models.BerkasCatatan",
+    'item berkas'  : "apps.pages.models.BerkasItem",
+    'pemohon'  : "apps.pages.models.Pemohon",
+    'pemeriksaan'  : "apps.pages.models.Pemeriksaan",
+    'catatan template'  : "apps.pages.models.CatatanTemplate",
 }
 ########################################
 
 # Syntax: URI -> Import_PATH
 DYNAMIC_API = {
     # SLUG -> Import_PATH 
-    'product'  : "apps.pages.models.Product",
+    # 'product'  : "apps.pages.models.Product",
     'permohonan'  : "apps.pages.models.Permohonan",
     'layanan'  : "apps.pages.models.Layanan",
     'item_berkas'  : "apps.pages.models.BerkasItem",
