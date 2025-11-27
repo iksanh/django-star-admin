@@ -9,8 +9,8 @@
       {% else %}
       <a class="nav-link" href="/">
       {% endif %}
-        <i class="mdi mdi-grid-large menu-icon"></i>
-        <span class="menu-title">Dashboard</span>
+        <i class="mdi mdi-home menu-icon"></i>
+        <span class="menu-title">Home</span>
       </a>
     </li>
     <li class="nav-item {% if 'dashboard' in parent %} active {% endif %}">
@@ -19,10 +19,11 @@
       {% else %}
       <a class="nav-link" href="/">
       {% endif %}
-        <i class="mdi mdi-grid-large menu-icon"></i>
+        <i class="mdi mdi-apps menu-icon"></i>
         <span class="menu-title">Master Data</span>
       </a>
     </li>
+{% comment %}
 
     {% admin_get_menu as app_list %}
     {% if app_list %}
@@ -58,7 +59,25 @@
       {% endfor %}
     {% endif %}
 
-    {% if request.user.is_authenticated and not request.user.is_superuser %}
+{% endcomment %}
+    
+    <!-- Menu master data  -->
+    <li class="nav-item nav-category">Master Data</li>
+    <li class="nav-item {% if 'ui-elements' in parent %} active {% endif %}">
+      <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <i class="menu-icon mdi mdi-apps"></i>
+        <span class="menu-title">Master Data</span>
+        <i class="menu-arrow"></i> 
+      </a>
+      <div class="collapse {% if 'ui-elements' in parent %} show {% endif %}" id="ui-basic">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link {% if 'buttons' in segment %} active {% endif %}" href="{% url 'buttons' %}">Permohonan</a></li>
+          <li class="nav-item"> <a class="nav-link {% if 'dropdowns' in segment %} active {% endif %}" href="{% url 'dropdowns' %}">Berkas</a></li>
+          <li class="nav-item"> <a class="nav-link {% if 'typography' in segment %} active {% endif %}" href="{% url 'typography' %}">Catatan</a></li>
+        </ul>
+      </div>
+    </li>
+    <!-- end master data  -->
     <li class="nav-item nav-category">UI Elements</li>
     <li class="nav-item {% if 'ui-elements' in parent %} active {% endif %}">
       <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
@@ -123,7 +142,7 @@
         </ul>
       </div>
     </li>
-    {% endif %}
+  
     <li class="nav-item nav-category">pages</li>
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
