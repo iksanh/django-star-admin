@@ -1,43 +1,17 @@
 from django import forms
-from django.forms import inlineformset_factory
-from .models import Permohonan, PermohonanBerkas, BerkasCatatan, BerkasItem
+from django.forms import inlineformset_factory, widgets
+from .models import Permohonan
 
 class PermohonanForm(forms.ModelForm):
     class Meta:
         model = Permohonan
-        fields = ['nama_pemohon', 'nik', 'layanan']
-
-
-class PermohonanBerkasForm(forms.ModelForm):
-    class Meta:
-        model = PermohonanBerkas
-        fields = ['status']
+        fields = ['nama_pemohon', 'nik', 'layanan', 'tanggal_permohonan', 'alamat']
         widgets = {
-            'status': forms.Select(attrs={'class': 'form-control'})
+            "nama_pemohon": forms.TextInput(attrs={"class": "big-input"}),
+            "alamat": forms.Textarea(attrs={"class": "form-control", "rows": 1, }),
+            "tanggal_permohonan": forms.DateInput(
+                attrs={"type": "date",  "class": "form-control  date datepicker navbar-date-picker"}
+            ),
         }
 
 
-class BerkasCatatanForm(forms.ModelForm):
-    class Meta:
-        model = BerkasCatatan
-        fields = ['isi_catatan']
-        widgets = {
-            'isi_catatan': forms.Textarea(attrs={'rows': 2})
-        }
-
-
-PermohonanBerkasFormSet = inlineformset_factory(
-    Permohonan,
-    PermohonanBerkas,
-    form=PermohonanBerkasForm,
-    extra=0,
-    can_delete=False
-)
-
-BerkasCatatanFormSet = inlineformset_factory(
-    PermohonanBerkas,
-    BerkasCatatan,
-    form=BerkasCatatanForm,
-    extra=1,
-    can_delete=False
-)

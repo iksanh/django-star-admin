@@ -52,7 +52,7 @@ class BerkasItem(models.Model):
 # PEMOHON 
 # ----------------------------------------------------------------------
 
-class Pemohon(models.Model):
+class Permohonan(models.Model):
     """
     Data pemohon per permohonan layanan.
     """
@@ -61,7 +61,7 @@ class Pemohon(models.Model):
     alamat = models.TextField(null=True, blank=True)
 
     layanan = models.ForeignKey(Layanan, on_delete=models.CASCADE)
-    tanggal_permohonan = models.DateField(auto_now_add=True)
+    tanggal_permohonan = models.DateField()
 
     def __str__(self):
         return f"{self.nama_pemohon} - {self.layanan.nama}"
@@ -71,7 +71,8 @@ class CatatanTemplate(models.Model):
     Catatan global yang dapat dipilih untuk setiap berkas.
     Contoh: OK, Belum Ada, Lengkapi luas, Coret & paraf batas, dll.
     """
-    berkas = models.ForeignKey(BerkasItem, on_delete=models.CASCADE, related_name="templates")
+    # berkas = models.ForeignKey(BerkasItem, on_delete=models.CASCADE, related_name="templates")
+    berkas = models.ManyToManyField(BerkasItem, related_name="templates")
     teks = models.CharField(max_length=255)
     is_global = models.BooleanField(default=True)
 
@@ -83,7 +84,7 @@ class Pemeriksaan(models.Model):
     """
     Pemeriksaan berkas per pemohon.
     """
-    pemohon = models.ForeignKey(Pemohon, on_delete=models.CASCADE)
+    pemohon = models.ForeignKey(Permohonan, on_delete=models.CASCADE)
     berkas = models.ForeignKey(BerkasItem, on_delete=models.CASCADE)
 
     # Beberapa catatan standar (multiple select)

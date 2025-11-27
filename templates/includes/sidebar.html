@@ -20,6 +20,13 @@
         <span class="menu-title">Master Data</span>
       </a>
     </li>
+
+    <li class="nav-item {% if 'permohonan' in segment %} active {% endif %}">
+      <a class="nav-link" href="{% url 'permohonan' %}">
+        <i class="mdi mdi-table menu-icon"></i>
+        <span class="menu-title">Permohonan</span>
+      </a>
+    </li>
     {% comment "This section is form api " %}
     <li class="nav-item {% if 'dynamic_api' in segment %} active {% endif %}">
       <a class="nav-link" href="{% url 'dynamic_api' %}">

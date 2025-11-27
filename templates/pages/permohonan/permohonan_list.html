@@ -1,0 +1,72 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} {% if page_title %} page_title {% else %} Dynamic DataTables {% endif %} {% endblock title %} 
+
+{% block content %}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h2>
+                           DAFTAR PERMOHONAN
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="container mt-4">
+                            
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Pemohon</th>
+                                        <th>NIK</th>
+                                        <th>Alamat</th>
+                                        <th>Layanan</th>
+                                        <th>Tanggal Permohonan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in permohonan_list %}
+                                    <tr>
+                                        <td>{{ item.nama_pemohon }}</td>
+                                        <td>{{ item.nik }}</td>
+                                        <td>{{ item.alamat }}</td>
+                                        <td>{{ item.layanan.nama }}</td>
+                                        <td>{{ item.tanggal_permohonan }}</td>
+                                        <td>
+                                            <a href="{% url 'pemeriksaan_input' item.id %}">
+                                            <button type="button" class="btn btn-primary btn-icon-text btn-sm">
+                                                <i class="ti-file btn-icon-prepend"></i>
+                                                Periksa Berkas
+                                            </button>
+                                            </a>
+                                            
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">Belum ada data permohonan.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+{% endblock content %}
+
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+{% endblock extra_js %}

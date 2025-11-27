@@ -81,7 +81,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
-HOME_TEMPLATES = os.path.join(BASE_DIR, 'templates')
+HOME_TEMPLATES = os.path.join(BASE_DIR, 'apps','templates')
 
 TEMPLATES = [
     {
@@ -190,8 +190,8 @@ DYNAMIC_DATATB = {
     # 'product'  : "apps.pages.models.Product",
     'layanan'  : "apps.pages.models.Layanan",
     'item berkas'  : "apps.pages.models.BerkasItem",
-    'pemohon'  : "apps.pages.models.Pemohon",
-    'pemeriksaan'  : "apps.pages.models.Pemeriksaan",
+    'permohonan'  : "apps.pages.models.Permohonan",
+    # 'pemeriksaan'  : "apps.pages.models.Pemeriksaan",
     'catatan template'  : "apps.pages.models.CatatanTemplate",
 }
 ########################################
@@ -203,7 +203,7 @@ DYNAMIC_API = {
     'permohonan'  : "apps.pages.models.Permohonan",
     'layanan'  : "apps.pages.models.Layanan",
     'item_berkas'  : "apps.pages.models.BerkasItem",
-    'permohonan_berkas'  : "apps.pages.models.PermohonanBerkas",
+    # 'permohonan_berkas'  : "apps.pages.models.PermohonanBerkas",
     'catatan_berkas'  : "apps.pages.models.BerkasCatatan",
 }
 

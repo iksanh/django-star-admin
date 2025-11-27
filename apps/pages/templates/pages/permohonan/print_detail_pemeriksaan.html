@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: sans-serif; font-size: 12px; }
+        h1 { text-align: center; font-size: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #444; padding: 6px; }
+    </style>
+</head>
+
+<body>
+
+<h1>Detail Pemeriksaan Pemohon</h1>
+
+<p><strong>Nama:</strong> {{ pemohon.nama_pemohon }}</p>
+<p><strong>NIK:</strong> {{ pemohon.nik }}</p>
+<p><strong>Alamat:</strong> {{ pemohon.alamat }}</p>
+<p><strong>Tanggal Permohonan:</strong> {{ pemohon.tanggal_permohonan }}</p>
+
+<hr>
+
+<h2>Hasil Pemeriksaan</h2>
+
+<table>
+    <tr>
+        <th>Berkas</th>
+        <th>Catatan</th>
+        
+    </tr>
+
+    {% for p in pemeriksaan_list %}
+    <tr>
+        <td>{{ p.berkas.nama }}</td>
+        <td>
+            {% for c in p.catatan.all %}
+                - {{ c.isi }} <br>
+            {% endfor %}
+        </td>
+        
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

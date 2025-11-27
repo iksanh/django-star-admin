@@ -7,15 +7,17 @@ import json
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt  # kita akan pakai csrf token header dari JS, jadi tidak perlu csrf_exempt
+from xhtml2pdf import pisa
 
-
-from .models import Pemohon, BerkasItem, Pemeriksaan, CatatanTemplate
+from .models import Permohonan as Pemohon, BerkasItem, Pemeriksaan, CatatanTemplate
+from django.template.loader import get_template
+import tempfile
 
 
 
 
 # Create your views here.
-
+@login_required
 def index(request):
 
     # Page from the theme 
@@ -25,10 +27,13 @@ def index(request):
     return render(request, 'pages/index.html', context)
 
 def permohonan(request):
+    data_permohonan = Pemohon.objects.all().order_by('-tanggal_permohonan')
+
     context = {
-        'segment': 'permohonan'
+        'segment': 'permohonan',
+        'permohonan_list': data_permohonan
     }
-    return render(request, 'pages/permohonan.html', context)
+    return render(request, 'pages/permohonan/permohonan_list.html', context)
 
 
 
@@ -114,7 +119,7 @@ def pemeriksaan_input(request, pemohon_id):
         "daftar_berkas": daftar_berkas,
         "pemeriksaan_map": pemeriksaan_map,
     }
-    return render(request, "pages/pemeriksaan_input.html", context)
+    return render(request, "pages/permohonan/pemeriksaan_input.html", context)
 
 
 def detail_pemohon(request, pemohon_id):
@@ -127,4 +132,29 @@ def detail_pemohon(request, pemohon_id):
         "pemohon": pemohon,
         "pemeriksaan_list": pemeriksaan_list,
     }
-    return render(request, "pages/detail_pemeriksaan.html", context)
+    return render(request, "pages/permohonan/detail_pemeriksaan.html", context)
+
+def print_detail_pemohon(request, pemohon_id):
+    pemohon = get_object_or_404(Pemohon, id=pemohon_id)
+    pemeriksaan_list = Pemeriksaan.objects.filter(
+        pemohon=pemohon
+    ).select_related("berkas").prefetch_related("catatan")
+
+    template_path = 'pages/permohonan/print_detail_pemeriksaan.html'
+    context = {
+        'pemohon': pemohon,
+        'pemeriksaan_list': pemeriksaan_list,
+    }
+
+    template = get_template(template_path)
+    html = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="pemohon_{pemohon_id}.pdf"'  # 👈 BUKA TAB BARU
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse("PDF Error.")
+
+    return response
