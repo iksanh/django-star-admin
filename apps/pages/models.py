@@ -16,6 +16,80 @@ User = get_user_model()
 #         return self.name
 
 
+class Province(models.Model):
+    id = models.CharField(
+        primary_key=True,
+        max_length=2
+    )
+    name = models.CharField(
+        max_length=255
+    )
+
+    class Meta:
+        db_table = 'reg_provinces'   # supaya sesuai dengan tabel SQL
+        verbose_name = "Province"
+        verbose_name_plural = "Provinces"
+
+    def __str__(self):
+        return self.name
+
+
+class Regency(models.Model):
+    id = models.CharField(
+        primary_key=True,
+        max_length=4
+    )
+    province = models.ForeignKey(
+        Province,
+        on_delete=models.CASCADE,
+        db_column='province_id'
+    )
+    name = models.CharField(
+        max_length=255
+    )
+
+    class Meta:
+        db_table = 'reg_regencies'
+
+    def __str__(self):
+        return self.name
+
+class District(models.Model):
+    id = models.CharField(
+        primary_key=True,
+        max_length=6
+    )
+    regency = models.ForeignKey(
+        Regency,
+        on_delete=models.CASCADE,
+        db_column='regency_id'
+    )
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'reg_districts'
+
+    def __str__(self):
+        return self.name
+
+class Village(models.Model):
+    id = models.CharField(
+        primary_key=True,
+        max_length=10
+    )
+    district = models.ForeignKey(
+        District,
+        on_delete=models.CASCADE,
+        db_column='district_id'
+    )
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'reg_villages'
+
+    def __str__(self):
+        return self.name
+
 # ----------------------------------------------------------------------
 # MASTER DATA
 # ----------------------------------------------------------------------
@@ -58,6 +132,19 @@ class Permohonan(models.Model):
     nama_pemohon = models.CharField(max_length=255)
     nik = models.CharField(max_length=50, null=True, blank=True)
     alamat = models.TextField(null=True, blank=True)
+    # ganti alamat ke relasi
+    district = models.ForeignKey(
+        District,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    village = models.ForeignKey(
+        Village,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     layanan = models.ForeignKey(Layanan, on_delete=models.CASCADE)
     tanggal_permohonan = models.DateField()
@@ -96,3 +183,5 @@ class Pemeriksaan(models.Model):
 
     def __str__(self):
         return f"Pemeriksaan {self.pemohon.nama_pemohon} - {self.berkas.nama}"
+
+

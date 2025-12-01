@@ -1,0 +1,51 @@
+{% extends "layouts/base.html" %} {% load static %} {% load crispy_forms_tags %} {% block title %} Detail
+Pemeriksaan {% endblock title %} {% block content %}
+
+<div class="col-10">
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title">
+        <h4>{{ view.object.pk|yesno:"Edit Layanan,Tambah Layanan" }}</h4>
+      </div>
+      <form method="post">
+        {% csrf_token %}
+        
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="{% url 'layanan_list' %}" class="btn btn-secondary">Batal</a>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const districtSelect = document.getElementById("id_district");
+        const villageSelect = document.getElementById("id_village");
+    
+        // reset desa ketika halaman pertama kali load
+        villageSelect.innerHTML = '<option value="">Pilih desa...</option>';
+    
+        districtSelect.addEventListener("change", function () {
+            const districtId = this.value;
+    
+            // kosongkan dropdown desa
+            villageSelect.innerHTML = '<option value="">Loading...</option>';
+    
+            if (!districtId) {
+                villageSelect.innerHTML = '<option value="">Pilih desa...</option>';
+                return;
+            }
+    
+            fetch(`/ajax/get-kecamatan/${districtId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    villageSelect.innerHTML = '<option value="">Pilih desa...</option>';
+                    data.forEach(v => {
+                        villageSelect.innerHTML += `<option value="${v.id}">${v.name}</option>`;
+                    });
+                });
+        });
+    });
+    </script>
+
+{% endblock content %}

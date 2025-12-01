@@ -9,7 +9,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt  # kita akan pakai csrf token header dari JS, jadi tidak perlu csrf_exempt
 from xhtml2pdf import pisa
 
-from .models import Permohonan as Pemohon, BerkasItem, Pemeriksaan, CatatanTemplate
+from .models import Permohonan as Pemohon, BerkasItem, Pemeriksaan, CatatanTemplate, Village
 from django.template.loader import get_template
 import tempfile
 
@@ -36,7 +36,9 @@ def permohonan(request):
     return render(request, 'pages/permohonan/permohonan_list.html', context)
 
 
-
+def get_villages(request, district_id):
+    villages = Village.objects.filter(district_id=district_id).values("id", "name")
+    return JsonResponse(list(villages), safe=False)
 
 @require_POST
 def ajax_create_catatan(request):

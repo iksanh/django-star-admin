@@ -10,18 +10,15 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header bg-white">
-                        <h2>
-                           DAFTAR PERMOHONAN
-                        </h2>
-                        
-                    </div>
                     <div class="card-body">
+                        <h4 class="card-title">Daftar Permohonan</h4>
                         <div class="container mt-4">
                             
-                                    <a href="#" class="btn btn-primary btn-sm text-white me-0"><i class="icon-download"></i> Export</a>
-                            
-                            <table class="table table-striped">
+                                    <div class="d-flex justify-content-end mb-3">
+                                        <a href="{% url 'permohonan_create' %}" class="btn btn-primary btn-sm text-white">Tambah Permohonan</a>
+                                    </div>
+                            <div class="table-responsive">
+                            <table class="table">
                                 <thead>
                                     <tr>
                                         <th>Nama Pemohon</th>
@@ -42,8 +39,8 @@
                                         <td>{{ item.tanggal_permohonan }}</td>
                                         <td>
                                             <a href="{% url 'pemeriksaan_input' item.id %}">
-                                            <button type="button" class="btn btn-primary btn-icon-text btn-sm">
-                                                <i class="ti-file btn-icon-prepend"></i>
+                                            <button type="button" class="btn btn-primary btn-sm">
+                                            
                                                 Periksa Berkas
                                             </button>
                                             </a>
@@ -58,6 +55,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -67,6 +65,37 @@
 
 {% endblock content %}
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const districtSelect = document.getElementById("id_district");
+        const villageSelect = document.getElementById("id_village");
+    
+        // reset desa ketika halaman pertama kali load
+        villageSelect.innerHTML = '<option value="">Pilih desa...</option>';
+    
+        districtSelect.addEventListener("change", function () {
+            const districtId = this.value;
+    
+            // kosongkan dropdown desa
+            villageSelect.innerHTML = '<option value="">Loading...</option>';
+    
+            if (!districtId) {
+                villageSelect.innerHTML = '<option value="">Pilih desa...</option>';
+                return;
+            }
+    
+            fetch(`/ajax/get-kecamatan/${districtId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    villageSelect.innerHTML = '<option value="">Pilih desa...</option>';
+                    data.forEach(v => {
+                        villageSelect.innerHTML += `<option value="${v.id}">${v.name}</option>`;
+                    });
+                });
+        });
+    });
+    </script>
+    
 
 {% block extra_js %}
 
