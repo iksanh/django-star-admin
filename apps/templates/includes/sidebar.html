@@ -13,16 +13,7 @@
         <span class="menu-title">Home</span>
       </a>
     </li>
-    <li class="nav-item {% if 'dashboard' in parent %} active {% endif %}">
-      {% if request.user.is_superuser %}
-      <a class="nav-link" href="{% url 'permohonan' %}">
-      {% else %}
-      <a class="nav-link" href="/">
-      {% endif %}
-        <i class="mdi mdi-apps menu-icon"></i>
-        <span class="menu-title">Master Data</span>
-      </a>
-    </li>
+    
 {% comment %}
 
     {% admin_get_menu as app_list %}
@@ -71,7 +62,8 @@
       </a>
       <div class="collapse {% if 'ui-elements' in parent %} show {% endif %}" id="ui-basic">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link {% if 'buttons' in segment %} active {% endif %}" href="{% url 'buttons' %}">Permohonan</a></li>
+          <li class="nav-item"> <a class="nav-link {% if 'permohonan' in segment %} active {% endif %}" href="{% url 'permohonan' %}">Permohonan</a></li>
+          <li class="nav-item"> <a class="nav-link {% if 'layanan' in segment %} active {% endif %}" href="{% url 'layanan_list' %}">layanan</a></li>
           <li class="nav-item"> <a class="nav-link {% if 'dropdowns' in segment %} active {% endif %}" href="{% url 'dropdowns' %}">Berkas</a></li>
           <li class="nav-item"> <a class="nav-link {% if 'typography' in segment %} active {% endif %}" href="{% url 'typography' %}">Catatan</a></li>
         </ul>

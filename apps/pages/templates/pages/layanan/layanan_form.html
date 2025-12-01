@@ -1,0 +1,18 @@
+{% extends "layouts/base.html" %} {% load static %} {% block title %} Detail
+Pemeriksaan {% endblock title %} {% block content %}
+<div class="col-12">
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title">
+        <h4>{{ view.object.pk|yesno:"Edit Layanan,Tambah Layanan" }}</h4>
+      </div>
+      <form method="post">
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit">Simpan</button>
+      </form>
+      <a href="{% url 'layanan_list' %}">Batal</a>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

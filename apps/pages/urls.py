@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -13,5 +13,7 @@ urlpatterns = [
      path('pemeriksaan/detail/<int:pemohon_id>/', 
          views.detail_pemohon, 
          name='detail_pemohon'),
+
+    path('layanan/', include('apps.pages.urls_layanan')),
   
 ]

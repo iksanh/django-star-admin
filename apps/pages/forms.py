@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory, widgets
-from .models import Permohonan
+from .models import Permohonan, Layanan
 
 class PermohonanForm(forms.ModelForm):
     class Meta:
@@ -15,3 +15,7 @@ class PermohonanForm(forms.ModelForm):
         }
 
 
+class LayananForm(forms.ModelForm):
+    class Meta:
+        model = Layanan
+        fields = ['nama', 'deskripsi']

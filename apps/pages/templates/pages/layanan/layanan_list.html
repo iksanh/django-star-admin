@@ -1,0 +1,44 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Detail Pemeriksaan {% endblock title %}
+
+{% block content %}
+
+    <div class="col-12">
+        
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Daftar Layanan</h4>
+                <a href="{% url 'layanan_create' %}" class="btn btn-sm btn-primary">Tambah Layanan</a>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>No</th>
+                            <th>Layanan</th>
+                            <th>Deksripsi</th>
+                            <th>Aksi</th>
+                          </tr>
+                        <tbody>
+                            {% for l in layanans %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ l.nama }}</td>
+                                <td>{{ l.deskripsi }}</td>
+                                <td>
+                                    
+                                    <a href="{% url 'layanan_edit' l.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{% url 'layanan_delete' l.pk %}" class="btn btn-sm btn-danger">Hapus</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock content %}
