@@ -40,6 +40,8 @@ class BerkasItem(models.Model):
     - Surat Pernyataan Penguasaan Fisik
     """
     nama = models.CharField(max_length=255)
+    layanan = models.ManyToManyField(Layanan, related_name="berkas_items")
+
     
     def __str__(self):
         return f"{self.nama}"
