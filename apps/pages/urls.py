@@ -15,5 +15,6 @@ urlpatterns = [
          name='detail_pemohon'),
 
     path('layanan/', include('apps.pages.urls_layanan')),
+    path('berkas/', include('apps.pages.urls_berkas_item')),
   
 ]
