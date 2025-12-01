@@ -1,44 +1,54 @@
-{% extends "layouts/base.html" %}
-{% load static %}
+{% extends "layouts/base.html" %} {% load static %} {% block title %} Detail
+Pemeriksaan {% endblock title %} {% block content %}
 
-{% block title %} Detail Pemeriksaan {% endblock title %}
-
-{% block content %}
-
-    <div class="col-10">
-        
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Daftar Layanan</h4>
-                <a href="{% url 'berkasitem_create' %}" class="btn btn-sm btn-primary text-end">Tambah Berkas</a>
-                <div class="table-responsive">
-                    <table class="table">
-                        <tr>
-                            <th>No</th>
-                            <th>Layanan</th>
-                            <th>Sub</th>
-                            <th>Aksi</th>
-                          </tr>
-                        <tbody>
-                            {% for l in berkasitems %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ l.nama }}</td>
-                                <td>#</td>
-                                <td>
-                                    
-                                    <a href="{% url 'berkasitem_edit' l.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                                    <a href="{% url 'berkasitem_delete' l.pk %}" class="btn btn-sm btn-danger">Hapus</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+<div class="col-10">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Daftar Layanan</h4>
+      <a
+        href="{% url 'berkasitem_create' %}"
+        class="btn btn-sm btn-primary text-end"
+        >Tambah Berkas</a
+      >
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <th>No</th>
+            <th>Layanan</th>
+            <th>Sub</th>
+            <th>Aksi</th>
+          </tr>
+          <tbody>
+            {% for l in berkasitems %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ l.nama }}</td>
+              <td>
+                {% for lay in l.layanan.all %}
+                <strong>{{ lay.nama }}</strong>{% if not forloop.last %}, 
+                {% endif %} {% empty %}
+                <span class="text-muted">Tidak ada</span>
+                {% endfor %}
+              </td>
+              <td>
+                <a
+                  href="{% url 'berkasitem_edit' l.pk %}"
+                  class="btn btn-sm btn-warning"
+                  >Edit</a
+                >
+                <a
+                  href="{% url 'berkasitem_delete' l.pk %}"
+                  class="btn btn-sm btn-danger"
+                  >Hapus</a
+                >
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-
-
+  </div>
+</div>
 
 {% endblock content %}
