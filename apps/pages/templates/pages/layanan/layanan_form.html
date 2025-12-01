@@ -1,16 +1,19 @@
-{% extends "layouts/base.html" %} {% load static %} {% block title %} Detail
+{% extends "layouts/base.html" %} {% load static %} {% load crispy_forms_tags %} {% block title %} Detail
 Pemeriksaan {% endblock title %} {% block content %}
-<div class="col-12">
+
+<div class="col-10">
   <div class="card">
     <div class="card-body">
       <div class="card-title">
         <h4>{{ view.object.pk|yesno:"Edit Layanan,Tambah Layanan" }}</h4>
       </div>
       <form method="post">
-        {% csrf_token %} {{ form.as_p }}
-        <button type="submit">Simpan</button>
+        {% csrf_token %}
+        
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="{% url 'layanan_list' %}" class="btn btn-secondary">Batal</a>
       </form>
-      <a href="{% url 'layanan_list' %}">Batal</a>
     </div>
   </div>
 </div>

@@ -63,6 +63,11 @@ INSTALLED_APPS = [
     # Charts
     "apps.charts",
 
+    # Crispy Forms
+    'crispy_forms',
+    'crispy_bootstrap5',
+
+
     # Tooling API-GEN
     'rest_framework',            # Include DRF           # <-- NEW 
     'rest_framework.authtoken',  # Include DRF Auth      # <-- NEW   
@@ -214,3 +219,7 @@ REST_FRAMEWORK = {
     ],
 }
 ########################################
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
