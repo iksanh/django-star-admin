@@ -1,8 +1,9 @@
 from cProfile import label
-from dataclasses import field
+from dataclasses import field, fields
+from pyexpat import model
 from django import forms
 from django.forms import inlineformset_factory, widgets
-from .models import Permohonan, Layanan, BerkasItem, District, Village
+from .models import Permohonan, Layanan, BerkasItem, District, Village, CatatanTemplate
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, Row, Column
 from crispy_forms.bootstrap import InlineCheckboxes
@@ -75,6 +76,28 @@ class BerkasItemForm(forms.ModelForm):
 
             # Checkbox layanan agar horizontal/rapi
             InlineCheckboxes('layanan'),
+
+            Submit('submit', 'Simpan', css_class="btn btn-primary"),
+        )
+
+class CatatanTemplateForm(forms.ModelForm):
+    class Meta:
+        model = CatatanTemplate
+        fields = ['teks', 'berkas']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # crispy form helper
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+
+        self.helper.layout = Layout(
+            Row(
+                Column('teks', css_class="mb-3"),
+            ),
+
+            # Checkbox layanan agar horizontal/rapi
+            InlineCheckboxes('berkas'),
 
             Submit('submit', 'Simpan', css_class="btn btn-primary"),
         )

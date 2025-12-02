@@ -11,22 +11,16 @@
 
 <body>
 
-<h1>Detail Pemeriksaan Pemohon</h1>
-
-<p><strong>Nama:</strong> {{ pemohon.nama_pemohon }}</p>
-<p><strong>NIK:</strong> {{ pemohon.nik }}</p>
-<p><strong>Alamat:</strong> {{ pemohon.alamat }}</p>
-<p><strong>Tanggal Permohonan:</strong> {{ pemohon.tanggal_permohonan }}</p>
-
-<hr>
-
-<h2>Hasil Pemeriksaan</h2>
+<h1>{{ pemohon.layanan.nama }}</h1>
 
 <table>
     <tr>
-        <th>Berkas</th>
+        <th>Nama : {{ pemohon.nama_pemohon }} </th>
+        <th>NIB : {{ pemohon.nik }} / {{ pemohon.village.name }},{{ pemohon.district.name }}</th>
+    </tr>
+    <tr>
+        <th>Kelengkapan Berkas</th>
         <th>Catatan</th>
-        
     </tr>
 
     {% for p in pemeriksaan_list %}
@@ -34,8 +28,10 @@
         <td>{{ p.berkas.nama }}</td>
         <td>
             {% for c in p.catatan.all %}
-                - {{ c.isi }} <br>
+                - {{ c.teks }} <br>
             {% endfor %}
+
+            {{ p.catatan_baru|default_if_none:"" }}
         </td>
         
     </tr>

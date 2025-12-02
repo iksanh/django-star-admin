@@ -131,7 +131,7 @@ class Permohonan(models.Model):
     """
     nama_pemohon = models.CharField(max_length=255)
     nik = models.CharField(max_length=50, null=True, blank=True)
-    alamat = models.TextField(null=True, blank=True)
+   
     # ganti alamat ke relasi
     district = models.ForeignKey(
         District,

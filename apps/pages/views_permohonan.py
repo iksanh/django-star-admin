@@ -7,7 +7,15 @@ from .forms import PermohonanForm
 class PermohonanListView(ListView):
     model = Permohonan
     template_name = "pages/permohonan/permohonan_list.html"
-    context_object_name = "permohonans"
+    context_object_name = "permohonan_list"
+    ordering = ['-tanggal_permohonan']
+
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context =  super().get_context_data(object_list=object_list, **kwargs)
+        context['segment'] = 'permohonan'
+
+        return context
 
 
 class PermohonanDetailView(DetailView):
@@ -33,4 +41,4 @@ class PermohonanUpdateView(UpdateView):
 class PermohonanDeleteView(DeleteView):
     model = Permohonan
     template_name = "pages/permohonan/permohonan_confirm_delete.html"
-    success_url = reverse_lazy("permohonan_list")
+    success_url = reverse_lazy("permohonan")

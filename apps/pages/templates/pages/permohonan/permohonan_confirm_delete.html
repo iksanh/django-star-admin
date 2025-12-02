@@ -1,0 +1,18 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Detail Pemeriksaan {% endblock title %}
+
+{% block content %}
+<h2>Hapus Layanan</h2>
+
+<p>Anda yakin ingin menghapus "{{ object.nama }}"?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Ya, hapus</button>
+</form>
+
+<a href="{% url 'layanan_list' %}">Batal</a>
+
+{% endblock content %}

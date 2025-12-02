@@ -1,0 +1,12 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Detail Pemeriksaan {% endblock title %}
+
+{% block content %}
+<h2>{{ layanan.nama }}</h2>
+<p>{{ layanan.deskripsi }}</p>
+
+<a href="{% url 'layanan_edit' layanan.pk %}">Edit</a>
+<a href="{% url 'layanan_list' %}">Kembali</a>
+{% endblock content %}

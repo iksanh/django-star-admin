@@ -42,15 +42,7 @@ def get_villages(request, district_id):
 
 @require_POST
 def ajax_create_catatan(request):
-    """
-    Terima AJAX JSON:
-    {
-      "berkas_id": 12,
-      "teks": "Perbaiki batas utara"
-    }
-    Membuat CatatanTemplate(berkas=..., teks=..., is_global=True)
-    Return JSON { "id": 45, "teks": "Perbaiki batas utara" }
-    """
+
     try:
         data = json.loads(request.body.decode('utf-8'))
         berkas_id = int(data.get('berkas_id'))
@@ -61,11 +53,24 @@ def ajax_create_catatan(request):
     if not teks:
         return HttpResponseBadRequest("Teks catatan kosong")
 
+    # Ambil berkas terkait
     berkas = get_object_or_404(BerkasItem, id=berkas_id)
-    cat = CatatanTemplate.objects.create(berkas=berkas, teks=teks, is_global=True)
 
-    return JsonResponse({"id": cat.id, "teks": cat.teks})
+    # 1. Buat catatan tanpa berkas
+    cat = CatatanTemplate.objects.create(
+        teks=teks,
+        is_global=False  # SET FALSE jika kamu ingin catatan khusus berkas
+    )
 
+    # 2. Tambahkan relasi ManyToMany
+    cat.berkas.add(berkas)
+
+    print(cat.id, cat.teks,berkas.id)
+    return JsonResponse({
+        "id": cat.id,
+        "teks": cat.teks,
+        "berkas": berkas.id
+    })
 
 def pemeriksaan_input(request, pemohon_id):
     pemohon = get_object_or_404(Pemohon, id=pemohon_id)

@@ -20,7 +20,7 @@
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">{{ item.nama }}</h6>
 
-                <button type="button" class="btn btn-sm btn-light"
+                <button type="button" class="btn btn-sm btn-dark"
                         data-bs-toggle="modal"
                         data-bs-target="#modalAddNote"
                         data-berkasid="{{ item.id }}"
@@ -56,11 +56,12 @@
                 <textarea class="form-control form-control-lg"
           name="catatan_baru_{{ item.id }}"
           placeholder="Tambahkan catatan tambahan di sini..."
-          style="min-height: 120px; resize: vertical;">{% if pemeriksaan %}{{ pemeriksaan.catatan_baru }}{% endif %}</textarea>
+          style="min-height: 120px; resize: vertical;">
+{{ pemeriksaan.catatan_baru|default_if_none:"" }}
+</textarea>
 
+<div id="extra_notes_holder_{{ item.id }}"></div>
 
-                <!-- tempat hidden input dari modal -->
-                <div id="extra_notes_holder_{{ item.id }}"></div>
 
             </div>
         </div>
@@ -148,7 +149,7 @@ async function handleAddNote(e) {
 
     const checklistContainer = document.querySelector(`#card-${berkasId} .checklist-container`);
     const extraHolder = document.getElementById(`extra_notes_holder_${berkasId}`);
-
+    
     if (makeGlobal) {
         const resp = await fetch("{% url 'ajax_create_catatan' %}", {
             method: "POST",
