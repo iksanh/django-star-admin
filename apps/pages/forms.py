@@ -60,23 +60,23 @@ class LayananForm(forms.ModelForm):
 class BerkasItemForm(forms.ModelForm):
     class Meta:
         model = BerkasItem
-        fields = ['nama', 'layanan']
+        fields = ['nama', 'layanan', 'catatan']
+        widgets = {
+            'catatan': forms.Textarea(attrs={
+                'class': 'form-control mb-3',
+                'placeholder': 'Tambahkan catatan jika diperlukan...',
+                'style': 'height: 120px; resize: vertical;',  
+            })
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # crispy form helper
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-
         self.helper.layout = Layout(
-            Row(
-                Column('nama', css_class="mb-3"),
-            ),
-
-            # Checkbox layanan agar horizontal/rapi
+            Row(Column('nama', css_class="mb-3")),
             InlineCheckboxes('layanan'),
-
+            Row(Column('catatan')),
             Submit('submit', 'Simpan', css_class="btn btn-primary"),
         )
 

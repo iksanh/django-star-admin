@@ -1,10 +1,10 @@
 {% extends "layouts/base.html" %} {% load static %} {% block title %} Detail
-Pemeriksaan {% endblock title %} {% block content %}
+Pemeriksaan {% endblock title %} {% load split_points %} {% block content %}
 
 <div class="col-10">
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title">Daftar Layanan</h4>
+      <h4 class="card-title">Daftar Berkas</h4>
       <a
         href="{% url 'berkasitem_create' %}"
         class="btn btn-sm btn-primary text-end"
@@ -14,8 +14,9 @@ Pemeriksaan {% endblock title %} {% block content %}
         <table class="table">
           <tr>
             <th>No</th>
+            <th>Item</th>
             <th>Layanan</th>
-            <th>Sub</th>
+            <th>Catatan</th>
             <th>Aksi</th>
           </tr>
           <tbody>
@@ -29,6 +30,11 @@ Pemeriksaan {% endblock title %} {% block content %}
                 {% endif %} {% empty %}
                 <span class="text-muted">Tidak ada</span>
                 {% endfor %}
+              </td>
+              <td class="text-wrap">
+                {% for point in l.catatan|split_points %}
+            <li>{{ point }}</li>
+        {% endfor %}
               </td>
               <td>
                 <a

@@ -42,3 +42,12 @@ class PermohonanDeleteView(DeleteView):
     model = Permohonan
     template_name = "pages/permohonan/permohonan_confirm_delete.html"
     success_url = reverse_lazy("permohonan")
+
+class PermohonanHistoryView(DetailView):
+    model = Permohonan
+    template_name = "pages/permohonan/history.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['history'] = self.object.history.all()
+        return ctx

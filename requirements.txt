@@ -32,3 +32,6 @@ django-dbbackup==4.2.1
 # Crispy Forms
 django-crispy-forms
 crispy_bootstrap5
+
+#history
+django-simple-history

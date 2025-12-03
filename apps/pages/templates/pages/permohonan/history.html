@@ -1,0 +1,20 @@
+<table class="table">
+    <tr>
+        <th>Tanggal</th>
+        <th>Diubah oleh</th>
+        <th>Jenis</th>
+    </tr>
+
+    {% for h in history %}
+    <tr>
+        <td>{{ h.history_date }}</td>
+        <td>{{ h.history_user }}</td>
+        <td>
+            {% if h.history_type == "+" %} Ditambah
+            {% elif h.history_type == "~" %} Diubah
+            {% elif h.history_type == "-" %} Dihapus
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>

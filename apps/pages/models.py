@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from simple_history.models import HistoricalRecords
 
 User = get_user_model()
 
@@ -115,6 +116,7 @@ class BerkasItem(models.Model):
     """
     nama = models.CharField(max_length=255)
     layanan = models.ManyToManyField(Layanan, related_name="berkas_items")
+    catatan = models.TextField(null=True, blank=True)
 
     
     def __str__(self):
@@ -149,6 +151,8 @@ class Permohonan(models.Model):
     layanan = models.ForeignKey(Layanan, on_delete=models.CASCADE)
     tanggal_permohonan = models.DateField()
 
+    #add history 
+    history = HistoricalRecords()
     def __str__(self):
         return f"{self.nama_pemohon} - {self.layanan.nama}"
 

@@ -2,7 +2,7 @@ from django.urls import path
 from .views_permohonan import (
     PermohonanListView, PermohonanDetailView,
     PermohonanCreateView, PermohonanUpdateView,
-    PermohonanDeleteView
+    PermohonanDeleteView, PermohonanHistoryView,
 )
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('create/', PermohonanCreateView.as_view(), name='permohonan_create'),
     path('<int:pk>/edit/', PermohonanUpdateView.as_view(), name='permohonan_edit'),
     path('<int:pk>/delete/', PermohonanDeleteView.as_view(), name='permohonan_delete'),
+    path('<int:pk>/history/', PermohonanHistoryView.as_view(), name='permohonan_history'),
 ]

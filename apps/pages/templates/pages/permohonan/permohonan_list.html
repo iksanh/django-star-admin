@@ -47,6 +47,16 @@
                         >
                           Periksa
                         </a>
+                        <a href="{% url 'print_detail_pemohon' item.id %}" 
+                        class="btn btn-success btn-sm" target="_blank">
+                       Print PDF
+               </a>
+                        <!-- <a
+                          href="{% url 'permohonan_history' item.id %}"
+                          class="btn btn-secondary btn-sm"
+                        >
+                          History Perubahan
+                        </a> -->
 
                         <a
                           href="{% url 'permohonan_delete' item.id %}"
@@ -54,6 +64,7 @@
                         >
                           Hapus
                         </a>
+                        
                       </td>
                     </tr>
                     {% empty %}
