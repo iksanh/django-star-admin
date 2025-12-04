@@ -54,13 +54,13 @@
     
     <!-- Menu master data  -->
     <li class="nav-item nav-category">Master Data</li>
-    <li class="nav-item {% if 'ui-elements' in parent %} active {% endif %}">
-      <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+    <li class="nav-item {% if 'permohonan' in parent %} active {% endif %}">
+      <a class="nav-link" data-bs-toggle="collapse" href="#data_master" aria-expanded="false" aria-controls="ui-basic">
         <i class="menu-icon mdi mdi-apps"></i>
         <span class="menu-title">Master Data</span>
         <i class="menu-arrow"></i> 
       </a>
-      <div class="collapse {% if 'ui-elements' in parent %} show {% endif %}" id="ui-basic">
+      <div class="collapse {% if 'permohonan' in parent %} show {% endif %}" id="data_master">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link {% if 'permohonan' in segment %} active {% endif %}" href="{% url 'permohonan' %}">Permohonan</a></li>
           <li class="nav-item"> <a class="nav-link {% if 'layanan' in segment %} active {% endif %}" href="{% url 'layanan_list' %}">layanan</a></li>
