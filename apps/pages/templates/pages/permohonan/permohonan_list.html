@@ -47,6 +47,12 @@
                         >
                           Periksa
                         </a>
+                        <a
+                          href="{% url 'permohonan_edit' item.id %}"
+                          class="btn btn-warning btn-sm"
+                        >
+                          Edit
+                        </a>
                         <a href="{% url 'print_detail_pemohon' item.id %}" 
                         class="btn btn-success btn-sm" target="_blank">
                        Print PDF
