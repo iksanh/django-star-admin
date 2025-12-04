@@ -117,6 +117,7 @@ class BerkasItem(models.Model):
     nama = models.CharField(max_length=255)
     layanan = models.ManyToManyField(Layanan, related_name="berkas_items")
     catatan = models.TextField(null=True, blank=True)
+    number = models.CharField(max_length=2, null=True, blank=True)
 
     
     def __str__(self):
