@@ -11,7 +11,10 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Daftar {{ title }}</h4>
-            <a href="{% url 'catatan_create' %}" class="btn btn-sm btn-primary text-end">Tambah {{ title }}</a>
+            <div class="d-flex justify-content-end">
+
+                <a href="{% url 'catatan_create' %}" class="btn btn-sm btn-primary text-end">Tambah {{ title }}</a>
+            </div>
 
             <div class="table-responsive">
                 <table class="table">

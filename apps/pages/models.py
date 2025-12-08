@@ -4,17 +4,6 @@ from simple_history.models import HistoricalRecords
 
 User = get_user_model()
 
-# Create your models here.
-
-# class Product(models.Model):
-    
-#     id    = models.AutoField(primary_key=True)
-#     name  = models.CharField(max_length = 100) 
-#     info  = models.CharField(max_length = 100, default = '')
-#     price = models.IntegerField(blank=True, null=True)
-
-#     def __str__(self):
-#         return self.name
 
 
 class Province(models.Model):
@@ -117,7 +106,9 @@ class BerkasItem(models.Model):
     nama = models.CharField(max_length=255)
     layanan = models.ManyToManyField(Layanan, related_name="berkas_items")
     catatan = models.TextField(null=True, blank=True)
-    number = models.CharField(max_length=2, null=True, blank=True)
+    no_hak_gb = models.CharField(max_length=2, null=True, blank=True)
+    no_hak_m = models.CharField(max_length=2, null=True, blank=True)
+    no_hak_guna_usaha = models.CharField(max_length=2, null=True, blank=True)
 
     
     def __str__(self):

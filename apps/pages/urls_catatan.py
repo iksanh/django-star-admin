@@ -6,7 +6,7 @@ from .views_catatan import (
 )
 
 urlpatterns = [
-    path('', CatatanListView.as_view(), name='catatan_list'),
+    path('', CatatanListView.as_view(), name='catatan'),
     path('<int:pk>/', CatatanDetailView.as_view(), name='catatan_detail'),
     path('create/', CatatanCreateView.as_view(), name='catatan_create'),
     path('<int:pk>/edit/', CatatanUpdateView.as_view(), name='catatan_edit'),

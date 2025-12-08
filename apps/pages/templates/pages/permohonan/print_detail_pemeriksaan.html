@@ -30,27 +30,28 @@
 
 <h1>{{ pemohon.layanan.nama }}</h1>
 
-<table>
+<table border="1" width="100%">
     <tr>
-        <th>Nama : {{ pemohon.nama_pemohon }} </th>
-        <th>NIB : {{ pemohon.nik }} / {{ pemohon.village.name }},{{ pemohon.district.name }}</th>
+        <th colspan="2" width="50%">Nama : {{ pemohon.nama_pemohon }} </th>
+        <th colspan="2">NIB : {{ pemohon.nik }} / {{ pemohon.village.name }}, {{ pemohon.district.name }}</th>
     </tr>
+
     <tr>
-        <th>Kelengkapan Berkas</th>
-        <th>Catatan</th>
+        <th colspan="2">Kelengkapan Berkas</th>
+        <th colspan="2">Catatan</th>
     </tr>
 
     {% for p in pemeriksaan_list %}
     <tr>
+        <td width="20">{{ p.berkas.number|default_if_none:"-" }}</td>
         <td>{{ p.berkas.nama }}</td>
-        <td>
+
+        <td colspan="2">
             {% for c in p.catatan.all %}
                 - {{ c.teks }} <br>
             {% endfor %}
-
             {{ p.catatan_baru|default_if_none:"" }}
         </td>
-        
     </tr>
     {% endfor %}
 </table>

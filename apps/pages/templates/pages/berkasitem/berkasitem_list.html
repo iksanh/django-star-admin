@@ -5,16 +5,20 @@ Pemeriksaan {% endblock title %} {% load split_points %} {% block content %}
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">Daftar Berkas</h4>
-      <a
+      <div class="d-flex justify-content-end">
+<a
         href="{% url 'berkasitem_create' %}"
-        class="btn btn-sm btn-primary text-end"
+        class="btn btn-sm btn-primary "
         >Tambah Berkas</a
       >
+      </div>
+      
       <div class="table-responsive">
         <table class="table">
           <tr>
-            <th>No</th>
+            <th>#</th>
             <th>Item</th>
+            <th>Nomor</th>
             <th>Layanan</th>
             <th>Catatan</th>
             <th>Aksi</th>
@@ -23,7 +27,8 @@ Pemeriksaan {% endblock title %} {% load split_points %} {% block content %}
             {% for l in berkasitems %}
             <tr>
               <td>{{ forloop.counter }}</td>
-              <td>{{ l.nama }}</td>
+              <td class="text-wrap">{{ l.nama }}</td>
+              <td class="text-wrap">{{ l.number|default_if_none:"-" }}</td>
               <td>
                 {% for lay in l.layanan.all %}
                 <strong>{{ lay.nama }}</strong>{% if not forloop.last %}, 

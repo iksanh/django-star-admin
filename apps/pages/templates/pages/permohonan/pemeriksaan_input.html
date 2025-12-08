@@ -163,12 +163,6 @@
                             <label class="form-label">Isi Catatan</label>
                             <input type="text" id="modalNoteText" class="form-control" required>
 
-                            <div class="form-check mt-3">
-                                <input class="form-check-input" type="checkbox" id="modalMakeGlobal">
-                                <label class="form-check-label" for="modalMakeGlobal">
-                                    Jadikan catatan global (disimpan di template)
-                                </label>
-                            </div>
                         </div>
 
                         <div class="modal-footer">
@@ -213,7 +207,7 @@ modalAddNote.addEventListener('show.bs.modal', function (e) {
     document.getElementById('modalBerkasId').value = button.getAttribute('data-berkasid');
     document.getElementById('modalBerkasName').innerHTML = button.getAttribute('data-berkasname');
     document.getElementById('modalNoteText').value = '';
-    document.getElementById('modalMakeGlobal').checked = false;
+    
 });
 
 
@@ -223,12 +217,14 @@ async function handleAddNote(e) {
 
     const berkasId = document.getElementById('modalBerkasId').value;
     const teks = document.getElementById('modalNoteText').value.trim();
-    const makeGlobal = document.getElementById('modalMakeGlobal').checked;
+    
 
     if (!teks) return false;
 
     const checklistContainer = document.querySelector(`#accordion-${berkasId} .checklist-container`);
     const extraHolder = document.getElementById(`extra_notes_holder_${berkasId}`);
+
+    const makeGlobal = true;
 
     if (makeGlobal) {
         const resp = await fetch("{% url 'ajax_create_catatan' %}", {

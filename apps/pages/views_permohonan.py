@@ -10,7 +10,7 @@ class PermohonanListView(SidebarContextMixin, ListView):
     template_name = "pages/permohonan/permohonan_list.html"
     context_object_name = "permohonan_list"
     ordering = ['-tanggal_permohonan']
-    parent = "permohonan"
+    parent = "data_master"
     segment = 'permohonan'
 
 
@@ -30,7 +30,7 @@ class PermohonanCreateView(SidebarContextMixin, CreateView):
     form_class = PermohonanForm
     template_name = "pages/permohonan/permohonan_form.html"
     success_url = reverse_lazy("permohonan")
-    parent = "permohonan"
+    parent = "data_master"
     segment = 'permohonan'
 
 class PermohonanUpdateView(SidebarContextMixin, UpdateView):
@@ -39,7 +39,7 @@ class PermohonanUpdateView(SidebarContextMixin, UpdateView):
     template_name = "pages/permohonan/permohonan_form.html"
     success_url = reverse_lazy("permohonan")
 
-    parent = "permohonan"
+    parent = "data_master"
     segment = 'permohonan'
 
 
@@ -49,12 +49,15 @@ class PermohonanDeleteView(DeleteView):
     template_name = "pages/permohonan/permohonan_confirm_delete.html"
     success_url = reverse_lazy("permohonan")
 
-    parent = "permohonan"
+    parent = "data_master"
     segment = 'permohonan'
 
 class PermohonanHistoryView(DetailView):
     model = Permohonan
     template_name = "pages/permohonan/history.html"
+
+    parent = "data_master"
+    segment = 'permohonan'
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

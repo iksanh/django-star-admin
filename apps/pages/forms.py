@@ -60,7 +60,7 @@ class LayananForm(forms.ModelForm):
 class BerkasItemForm(forms.ModelForm):
     class Meta:
         model = BerkasItem
-        fields = ['number','nama', 'layanan', 'catatan']
+        fields = ['no_hak_m','nama', 'layanan', 'catatan']
         widgets = {
             'catatan': forms.Textarea(attrs={
                 'class': 'form-control mb-3',
