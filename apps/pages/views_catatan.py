@@ -43,7 +43,7 @@ class CatatanUpdateView(SidebarContextMixin, UpdateView):
     model = Catatan
     form_class = CatatanTemplateForm
     template_name = "pages/catatan/catatan_form.html"
-    success_url = reverse_lazy("catatan_list")
+    success_url = reverse_lazy("catatan")
 
     parent = "data_master"
     segment = 'catatan'

@@ -1,58 +1,82 @@
-{% extends "layouts/base.html" %} {% load static %} {% load crispy_forms_tags %} {% block title %} Detail
-Pemeriksaan {% endblock title %} {% block content %}
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} Detail Pemeriksaan {% endblock title %}
+
+{% block content %}
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="row">
       <div class="col-sm-12">
 
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title">
+              <h4>{{ view.object.pk|yesno:"Edit Layanan,Tambah Layanan" }}</h4>
+            </div>
 
-  <div class="card">
-    <div class="card-body">
-      <div class="card-title">
-        <h4>{{ view.object.pk|yesno:"Edit Layanan,Tambah Layanan" }}</h4>
+            <form method="post">
+              {% csrf_token %}
+
+              {{ form|crispy }}
+
+              <button type="submit" class="btn btn-primary">Simpan</button>
+              <a href="{% url 'permohonan' %}" class="btn btn-secondary">Batal</a>
+            </form>
+
+          </div>
+        </div>
+
       </div>
-      <form method="post">
-        {% csrf_token %}
-        
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-primary">Simpan</button>
-        <a href="{% url 'permohonan' %}" class="btn btn-secondary">Batal</a>
-      </form>
     </div>
   </div>
 </div>
-</div>
-</div>
-</div>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const districtSelect = document.getElementById("id_district");
-        const villageSelect = document.getElementById("id_village");
-    
-        // reset desa ketika halaman pertama kali load
-        villageSelect.innerHTML = '<option value="">Pilih desa...</option>';
-    
-        districtSelect.addEventListener("change", function () {
-            const districtId = this.value;
-    
-            // kosongkan dropdown desa
-            villageSelect.innerHTML = '<option value="">Loading...</option>';
-    
-            if (!districtId) {
-                villageSelect.innerHTML = '<option value="">Pilih desa...</option>';
-                return;
-            }
-    
-            fetch(`/ajax/get-kecamatan/${districtId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    villageSelect.innerHTML = '<option value="">Pilih desa...</option>';
-                    data.forEach(v => {
-                        villageSelect.innerHTML += `<option value="${v.id}">${v.name}</option>`;
-                    });
-                });
-        });
-    });
-    </script>
+document.addEventListener("DOMContentLoaded", function () {
+    const districtSelect = document.getElementById("id_district")
+    const villageSelect = document.getElementById("id_village")
+
+    // GET current selected village if editing
+    const selectedVillageId = "{{ form.instance.village_id }}"
+
+    // Jangan reset kalau sedang edit
+    if (!selectedVillageId) {
+        villageSelect.innerHTML = '<option value="">Pilih desa...</option>'
+    }
+
+    districtSelect.addEventListener("change", function () {
+        const districtId = this.value
+
+        villageSelect.innerHTML = '<option value="">Loading...</option>'
+
+        if (!districtId) {
+            villageSelect.innerHTML = '<option value="">Pilih desa...</option>'
+            return
+        }
+
+        fetch(`/ajax/get-kecamatan/${districtId}/`)
+            .then(response => response.json())
+            .then(data => {
+                villageSelect.innerHTML = '<option value="">Pilih desa...</option>'
+                data.forEach(v => {
+                    villageSelect.innerHTML += `<option value="${v.id}">${v.name}</option>`
+                })
+
+                // Auto-select saat edit
+                if (selectedVillageId) {
+                    villageSelect.value = selectedVillageId
+                }
+            })
+    })
+
+    // Saat edit dan district sudah terisi → trigger load
+    if (districtSelect.value){
+        const event = new Event('change')
+        districtSelect.dispatchEvent(event)
+    }
+})
+</script>
 
 {% endblock content %}

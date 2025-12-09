@@ -9,6 +9,7 @@ class BerkasItemListView(SidebarContextMixin, ListView):
     model = BerkasItem
     template_name = "pages/berkasitem/berkasitem_list.html"
     context_object_name = "berkasitems"
+    paginate_by = 10
 
     parent = 'data_master'
     segment = 'berkas'

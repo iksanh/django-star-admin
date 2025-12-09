@@ -10,6 +10,7 @@ class PermohonanListView(SidebarContextMixin, ListView):
     template_name = "pages/permohonan/permohonan_list.html"
     context_object_name = "permohonan_list"
     ordering = ['-tanggal_permohonan']
+    paginate_by = 10
     parent = "data_master"
     segment = 'permohonan'
 

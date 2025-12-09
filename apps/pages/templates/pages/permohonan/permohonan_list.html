@@ -16,73 +16,85 @@
                   >Tambah Permohonan</a
                 >
               </div>
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Nama Pemohon</th>
-                      <th>NIB</th>
-                      <th>Alamat</th>
-                      <th>Layanan</th>
-                      <th>Tanggal Permohonan</th>
-                      <th>Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for item in permohonan_list %}
-                    <tr>
-                      <td>{{ item.nama_pemohon }}</td>
-                      <td>{{ item.nik }}</td>
-                      <td>
-                        <p>
-                          {{ item.village.name|default:"-" }}, Kecamatan {{ item.district.name|default:"-" }}
-                        </p>
-                      </td>
-                      <td>{{ item.layanan.nama }}</td>
-                      <td>{{ item.tanggal_permohonan }}</td>
-                      <td>
-                        <a
-                          href="{% url 'pemeriksaan_input' item.id %}"
-                          class="btn btn-primary btn-sm"
-                        >
-                          Periksa
-                        </a>
-                        <a
-                          href="{% url 'permohonan_edit' item.id %}"
-                          class="btn btn-warning btn-sm"
-                        >
-                          Edit
-                        </a>
-                        <a href="{% url 'print_detail_pemohon' item.id %}" 
-                        class="btn btn-success btn-sm" target="_blank">
-                       Print PDF
-               </a>
-                        <!-- <a
-                          href="{% url 'permohonan_history' item.id %}"
-                          class="btn btn-secondary btn-sm"
-                        >
-                          History Perubahan
-                        </a> -->
+             <div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nama Pemohon</th>
+        <th>NIB</th>
+        <th>Alamat</th>
+        <th>Layanan</th>
+        <th>Tanggal Permohonan</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
 
-                        <a
-                          href="{% url 'permohonan_delete' item.id %}"
-                          class="btn btn-danger btn-sm"
-                        >
-                          Hapus
-                        </a>
-                        
-                      </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                      <td colspan="5" class="text-center">
-                        Belum ada data permohonan.
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
+      {% for item in object_list %}
+      <tr>
+        <td>{{ item.nama_pemohon }}</td>
+        <td>{{ item.nik }}</td>
+        <td>
+          <p>
+            {{ item.village.name|default:"-" }}, Kecamatan {{ item.district.name|default:"-" }}
+          </p>
+        </td>
+        <td>{{ item.layanan.nama }}</td>
+        <td>{{ item.tanggal_permohonan }}</td>
+        <td>
+          <a href="{% url 'pemeriksaan_input' item.id %}" class="btn btn-primary btn-sm">Periksa</a>
+          <a href="{% url 'permohonan_edit' item.id %}" class="btn btn-warning btn-sm">Edit</a>
+          <a href="{% url 'print_detail_pemohon' item.id %}" class="btn btn-success btn-sm" target="_blank">Print PDF</a>
+          <a href="{% url 'permohonan_delete' item.id %}" class="btn btn-danger btn-sm">Hapus</a>
+        </td>
+      </tr>
+
+      {% empty %}
+      <tr>
+        <td colspan="6" class="text-center">Belum ada data permohonan.</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</div>
+
+
+<!-- PAGINATION -->
+<div class="d-flex justify-content-center mt-3">
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+      {% endif %}
+
+      {% for page_num in page_obj.paginator.page_range %}
+        {% if page_obj.number == page_num %}
+          <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+        {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Next</span></li>
+      {% endif %}
+
+    </ul>
+  </nav>
+</div>
+<!-- end pagination  -->
             </div>
           </div>
         </div>
