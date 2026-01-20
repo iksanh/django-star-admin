@@ -11,6 +11,47 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Solid header accordion</h4>
+                  <p class="card-description">Use class <code>.accordion-solid-header</code> for basic accordion</p>
+                {% for item in daftar_berkas %}
+                        {% with pemeriksaan=pemeriksaan_map|get_item:item.id %}
+
+              
+                  <div class="mt-4">
+                    <div class="accordion accordion-solid-header" id="accordion-{{ item.id }}" role="tablist">
+                      <div class="card">
+                        <div class="card-header" role="tab" id="heading-{{ item.id }}">
+                          <h6 class="mb-0">
+                            <a data-bs-toggle="collapse" href="#collapse-{{ item.id }}" aria-expanded="false" aria-controls="collapse-{{ item.id }}" class="collapsed">
+                              {{ item.nama }}
+                            </a>
+                          </h6>
+                        </div>
+                        <div id="collapse-{{ item.id }}" class="collapse" role="tabpanel" aria-labelledby="heading-{{ item.id }}" data-bs-parent="#accordion-4" style="">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-3">
+                                <img src="../../../assets/images/samples/300x300/10.jpg" class="mw-100" alt="image">
+                              </div>
+                              <div class="col-9">
+                                <p class="mb-0">You can pay for the product you have purchased using credit cards, debit
+                                  cards, or via online banking.
+                                  We also on-delivery services.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+               
+ {% endwith %}
+ {% endfor %}
+  </div>
+              </div>
+              <div class="card">
                     <div class="card-body">
                         <div class="card-title">
                 <div class="container py-3">
@@ -27,108 +68,34 @@
                         {% for item in daftar_berkas %}
                         {% with pemeriksaan=pemeriksaan_map|get_item:item.id %}
 
-                        <!-- START ACCORDION -->
-                        <div class="accordion mb-4" id="accordion-{{ item.id }}">
-                            <div class="accordion-item">
-
-                                <h2 class="accordion-header" id="heading-{{ item.id }}">
-                                    <button class="accordion-button collapsed bg-primary text-white"
-                                            type="button"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#collapse-{{ item.id }}"
-                                            aria-expanded="true"
-                                            aria-controls="collapse-{{ item.id }}">
-                                        {{ item.nama }}
-                                    </button>
-                                </h2>
-
-                                <div id="collapse-{{ item.id }}"
-                                     class="accordion-collapse collapse"
-                                     aria-labelledby="heading-{{ item.id }}"
-                                     data-bs-parent="#accordion-{{ item.id }}">
-
-                                    <div class="accordion-body">
-
-                                        <div class="row">
-                                            <!-- KIRI -->
-                                            <div class="col-sm-8">
-                                                <div class="card">
-                                                    <div class="card-body">
-
-                                                        <div class="d-flex justify-content-between">
-                                                            <p class="text-black fw-bold small mb-1">Pilih catatan:</p>
-
-                                                            <button type="button" class="btn btn-sm btn-dark"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#modalAddNote"
-                                                                    data-berkasid="{{ item.id }}"
-                                                                    data-berkasname="{{ item.nama }}">
-                                                                + Catatan
-                                                            </button>
-                                                        </div>
-
-                                                        <!-- CHECKLIST -->
-                                                        <div class="d-flex flex-wrap gap-3 checklist-container ps-4">
-                                                            {% for t in item.templates.all %}
-                                                            <div class="form-check form-check-inline">
-                                                                <input class="form-check-input"
-                                                                       type="checkbox"
-                                                                       name="catatan_{{ item.id }}"
-                                                                       value="{{ t.id }}"
-                                                                       id="ct_{{ item.id }}_{{ t.id }}"
-                                                                       {% if pemeriksaan and t in pemeriksaan.catatan.all %}checked{% endif %}>
-
-                                                                <label class="form-check-label"
-                                                                       for="ct_{{ item.id }}_{{ t.id }}">
-                                                                    {{ t.teks }}
-                                                                </label>
-                                                            </div>
-                                                            {% empty %}
-                                                            <span class="text-muted">Belum ada template catatan</span>
-                                                            {% endfor %}
-                                                        </div>
-
-                                                        <hr class="my-3">
-
-                                                        <!-- CATATAN BARU -->
-                                                        <label class="form-label small text-black fw-bold">
-                                                            Catatan khusus untuk permohonan ini:
-                                                        </label>
-
-                                                        <textarea class="form-control form-control-lg"
-                                                                  name="catatan_baru_{{ item.id }}"
-                                                                  placeholder="Tambahkan catatan tambahan di sini..."
-                                                                  style="min-height: 120px; resize: vertical;">
-{{ pemeriksaan.catatan_baru|default_if_none:"" }}
-                                                        </textarea>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- KANAN -->
-                                            <div class="col-sm-4">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h4 class="card-title">Catatan</h4>
-
-                                                        {% for point in item.catatan|split_points %}
-                                                        <ul>{{ point|default_if_none:"-" }}</ul>
-                                                        {% endfor %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- HOLDER CATATAN EXTRA -->
-                                        <div id="extra_notes_holder_{{ item.id }}"></div>
-
-                                    </div>
-                                </div>
-
-                            </div>
+                        <div class="accordion accordion-solid-header" id="accordion-{{ item.id }}" role="tablist">
+                      <div class="card">
+                        <div class="card-header" role="tab" id="heading-{{ item.id }}">
+                          <h6 class="mb-0">
+                            <a data-bs-toggle="collapse" href="#collapse-{{ item.id }}" aria-expanded="false" aria-controls="collapse-{{ item.id }}" class="">
+                              {{ item.nama }}
+                            </a>
+                          </h6>
                         </div>
-                        <!-- END ACCORDION -->
+                        <div id="collapse-{{ item.id }}" class="collapse show" role="tabpanel" aria-labelledby="heading-{{ item.id }}" data-bs-parent="#accordion-{{ item.id }}" style="">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-3">
+                                <img src="../../../assets/images/samples/300x300/10.jpg" class="mw-100" alt="image">
+                              </div>
+                              <div class="col-9">
+                                <p class="mb-0">You can pay for the product you have purchased using credit cards, debit
+                                  cards, or via online banking.
+                                  We also on-delivery services.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                     
+                    </div>
+                      
 
                         {% endwith %}
                         {% endfor %}

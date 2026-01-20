@@ -75,6 +75,7 @@ def ajax_create_catatan(request):
 def pemeriksaan_input(request, pemohon_id):
     pemohon = get_object_or_404(Pemohon, id=pemohon_id)
     daftar_berkas = BerkasItem.objects.all()
+    daftar_berkas = BerkasItem.objects.filter(layanan=pemohon.layanan)
 
     # Ambil semua pemeriksaan yang pernah tersimpan untuk pemohon ini
     pemeriksaan_map = {
@@ -126,7 +127,7 @@ def pemeriksaan_input(request, pemohon_id):
         "daftar_berkas": daftar_berkas,
         "pemeriksaan_map": pemeriksaan_map,
     }
-    return render(request, "pages/permohonan/pemeriksaan_input.html", context)
+    return render(request, "pages/permohonan/pemeriksaan_input_1.html", context)
 
 
 def detail_pemohon(request, pemohon_id):

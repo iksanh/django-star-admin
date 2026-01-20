@@ -40,7 +40,7 @@
           </p>
         </td>
         <td>{{ item.layanan.nama }}</td>
-        <td>{{ item.tanggal_permohonan }}</td>
+        <td>{{ item.tanggal_permohonan|date:"d F Y" }}</td>
         <td>
           <a href="{% url 'pemeriksaan_input' item.id %}" class="btn btn-primary btn-sm">Periksa</a>
           <a href="{% url 'permohonan_edit' item.id %}" class="btn btn-warning btn-sm">Edit</a>

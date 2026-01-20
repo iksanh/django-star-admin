@@ -105,10 +105,20 @@ class BerkasItem(models.Model):
     """
     nama = models.CharField(max_length=255)
     layanan = models.ManyToManyField(Layanan, related_name="berkas_items")
+
+      # urutan berbeda per jenis hak / layanan
+    urutan = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Contoh: {'HM': 3, 'HGB': 4}"
+    )
     catatan = models.TextField(null=True, blank=True)
-    no_hak_gb = models.CharField(max_length=2, null=True, blank=True)
-    no_hak_m = models.CharField(max_length=2, null=True, blank=True)
-    no_hak_guna_usaha = models.CharField(max_length=2, null=True, blank=True)
+ 
+    def get_urutan(self, kode_layanan):
+        """
+        Ambil urutan sesuai jenis hak (HM/HGB/HGU)
+        """
+        return self.urutan.get(kode_layanan, 999)
 
     
     def __str__(self):
@@ -124,6 +134,7 @@ class Permohonan(models.Model):
     Data pemohon per permohonan layanan.
     """
     nama_pemohon = models.CharField(max_length=255)
+    atas_nama = models.CharField(max_length=255, null=True, blank=True)
     nik = models.CharField(max_length=50, null=True, blank=True)
    
     # ganti alamat ke relasi

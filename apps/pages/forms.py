@@ -11,7 +11,7 @@ from crispy_forms.bootstrap import InlineCheckboxes
 class PermohonanForm(forms.ModelForm):
     class Meta:
         model = Permohonan
-        fields = ['nama_pemohon', 'nik', 'layanan', 'tanggal_permohonan', 'district','village']
+        fields = ['nama_pemohon','atas_nama', 'nik', 'layanan', 'tanggal_permohonan', 'district','village']
 
         labels = {
             'district' : 'Kecamatan',
@@ -60,7 +60,7 @@ class LayananForm(forms.ModelForm):
 class BerkasItemForm(forms.ModelForm):
     class Meta:
         model = BerkasItem
-        fields = ['no_hak_m','nama', 'layanan', 'catatan']
+        fields = ['nama', 'layanan', 'catatan']
         widgets = {
             'catatan': forms.Textarea(attrs={
                 'class': 'form-control mb-3',

@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load berkas_extras %}
+{% block content %}
+
+<h3>Pengaturan Urutan Berkas</h3>
+
+<form method="get">
+    <label>Pilih Jenis Hak</label>
+    <select name="jenis_hak" onchange="this.form.submit()">
+        <option value="">-- Pilih --</option>
+        {% for l in layanan_list %}
+            <option value="{{ l.kode }}"
+                {% if jenis_hak == l.kode %}selected{% endif %}
+            >
+                {{ l.nama }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+{% if jenis_hak %}
+<hr>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="jenis_hak" value="{{ jenis_hak }}">
+
+    <table border="1" cellpadding="6" cellspacing="0">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Berkas</th>
+                <th>Urutan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for berkas in berkas_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ berkas.nama }}</td>
+                <td>
+                    <input
+                        type="number"
+                        name="berkas_{{ berkas.id }}"
+                       value="{{ berkas|urutan_for:jenis_hak }}"
+                        min="1"
+                        style="width:70px"
+                    >
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <button type="submit">Simpan Urutan</button>
+</form>
+{% endif %}
+
+
+
+{% endblock %}
