@@ -104,6 +104,14 @@ class BerkasItem(models.Model):
     - Surat Pernyataan Penguasaan Fisik
     """
     nama = models.CharField(max_length=255)
+
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='sub_berkas'
+    )
     layanan = models.ManyToManyField(Layanan, related_name="berkas_items")
 
       # urutan berbeda per jenis hak / layanan
@@ -114,16 +122,16 @@ class BerkasItem(models.Model):
     )
     catatan = models.TextField(null=True, blank=True)
  
+    def is_utama(self):
+        return self.parent is None
+
     def get_urutan(self, kode_layanan):
-        """
-        Ambil urutan sesuai jenis hak (HM/HGB/HGU)
-        """
-        return self.urutan.get(kode_layanan, 999)
-
+        value = self.urutan.get(kode_layanan)
+        return value if isinstance(value, int) else 999
     
-    def __str__(self):
-        return f"{self.nama}"
 
+    def __str__(self):
+        return self.nama
 
 # ----------------------------------------------------------------------
 # PEMOHON 

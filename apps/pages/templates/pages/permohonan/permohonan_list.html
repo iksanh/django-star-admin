@@ -7,15 +7,22 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Daftar Permohonan</h4>
-            <div class="container mt-4">
-              <div class="d-flex justify-content-end mb-3">
-                <a
-                  href="{% url 'permohonan_create' %}"
-                  class="btn btn-primary btn-sm text-white"
-                  >Tambah Permohonan</a
-                >
+            <div class="card-title d-flex justify-content-between"">
+              
+                <h4>Daftar Permohonan</h4>
+              
+                <div class="d-flex justify-content-end mb-3">
+                  <a
+                    href="{% url 'permohonan_create' %}"
+                    class="btn btn-primary btn-sm text-white"
+                    >Tambah Permohonan</a
+                  >
+              
+            </div>
               </div>
+            
+              
+            
              <div class="table-responsive">
   <table class="table">
     <thead>

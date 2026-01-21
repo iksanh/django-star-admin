@@ -7,86 +7,93 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-<div class="col-12">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Daftar {{ title }}</h4>
-            <div class="d-flex justify-content-end">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title d-flex justify-content-between">
+                            <h4>Daftar {{ title }}</h4>
+                            <a href="{% url 'catatan_create' %}" class="btn btn-sm btn-primary">Tambah {{ title }}</a>
+                        </div>
 
-                <a href="{% url 'catatan_create' %}" class="btn btn-sm btn-primary text-end">Tambah {{ title }}</a>
+                        <div class="table-responsive">
+                            <table class="table" id="catatanTable">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Catatan</th>
+                                        <th>Berkas</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for l in catatans %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td class="text-wrap">{{ l.teks }}</td>
+                                        <td>
+                                            <!-- Tombol buka modal -->
+                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#modal{{ l.id }}">
+                                                Lihat Berkas
+                                            </button>
+
+                                            <!-- Modal Popup -->
+                                            <div class="modal fade" id="modal{{ l.id }}" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Daftar Berkas</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"></button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            {% if l.berkas.all %}
+                                                            <ul class="list-group">
+                                                                {% for b in l.berkas.all %}
+                                                                <li class="list-group-item text-wrap">
+                                                                    {{ b.nama }}
+                                                                </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                            {% else %}
+                                                            <p class="text-muted">Tidak ada berkas terkait.</p>
+                                                            {% endif %}
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Tutup</button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /Modal -->
+
+                                        </td>
+
+                                        <td>
+                                            <a href="{% url 'catatan_edit' l.pk %}"
+                                                class="btn btn-sm btn-warning">Edit</a>
+                                            <a href="{% url 'catatan_delete' l.pk %}"
+                                                class="btn btn-sm btn-danger">Hapus</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Catatan</th>
-                            <th>Berkas</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for l in catatans %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ l.teks }}</td>
-                            <td>
-                                <!-- Tombol buka modal -->
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal{{ l.id }}">
-                                    Lihat Berkas
-                                </button>
-
-                                <!-- Modal Popup -->
-                                <div class="modal fade" id="modal{{ l.id }}" tabindex="-1">
-                                  <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-
-                                      <div class="modal-header">
-                                        <h5 class="modal-title">Daftar Berkas</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                      </div>
-
-                                      <div class="modal-body">
-                                        {% if l.berkas.all %}
-                                            <ul class="list-group">
-                                                {% for b in l.berkas.all %}
-                                                    <li class="list-group-item text-wrap">
-                                                        {{ b.nama }}
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% else %}
-                                            <p class="text-muted">Tidak ada berkas terkait.</p>
-                                        {% endif %}
-                                      </div>
-
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                      </div>
-
-                                    </div>
-                                  </div>
-                                </div>
-                                <!-- /Modal -->
-
-                            </td>
-
-                            <td>
-                                <a href="{% url 'catatan_edit' l.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                                <a href="{% url 'catatan_delete' l.pk %}" class="btn btn-sm btn-danger">Hapus</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
         </div>
     </div>
 </div>
-</div>
-</div>
-</div>
 
 {% endblock content %}
+{% block extra_js %}
+<script src="{% static 'js/catatan-table.js' %}"></script>
+{% endblock %}

@@ -13,7 +13,8 @@ class PermohonanListView(SidebarContextMixin, ListView):
     paginate_by = 10
     parent = "data_master"
     segment = 'permohonan'
-
+    page_title = "Permohonan"
+    page_mode = "list"
 
 
 
@@ -22,6 +23,9 @@ class PermohonanDetailView(DetailView):
     model = Permohonan
     template_name = "pages/permohonan/permohonan_detail.html"
     context_object_name = "permohonan"
+    
+    page_title = "Permohonan"
+    page_mode = "list"
 
     
 
@@ -33,6 +37,8 @@ class PermohonanCreateView(SidebarContextMixin, CreateView):
     success_url = reverse_lazy("permohonan")
     parent = "data_master"
     segment = 'permohonan'
+    page_title = "Permohonan"
+    page_mode = "form"
 
 class PermohonanUpdateView(SidebarContextMixin, UpdateView):
     model = Permohonan
@@ -42,7 +48,8 @@ class PermohonanUpdateView(SidebarContextMixin, UpdateView):
 
     parent = "data_master"
     segment = 'permohonan'
-
+    page_title = "Permohonan"
+    page_mode = "form"
 
 
 class PermohonanDeleteView(DeleteView):

@@ -1,11 +1,15 @@
 {% extends "layouts/base.html" %} {% load static %} {% load crispy_forms_tags %} {% block title %} Detail
 Pemeriksaan {% endblock title %} {% block content %}
 
-<div class="col-10">
+<div class="main-panel">
+  <div class="content-wrapper">
+      <div class="row">
+<div class="col-12">
   <div class="card">
     <div class="card-body">
-      <div class="card-title">
-        <h4>{{ view.object.pk|yesno:"Edit Layanan,Tambah Layanan" }}</h4>
+      <div class="card-title d-flex justify-content-between">
+        <h4>{{ view.object.pk|yesno:"Edit Berkas Item,Tambah Berkas Item" }}</h4>
+        <a class="btn btn-sm btn-primary" href="{% url 'berkasitem_create' %}">Tambah Berkas Item</a>
       </div>
       <form method="post">
         {% csrf_token %}
@@ -17,5 +21,5 @@ Pemeriksaan {% endblock title %} {% block content %}
     </div>
   </div>
 </div>
-
+</div></div></div>
 {% endblock content %}

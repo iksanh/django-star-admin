@@ -15,7 +15,9 @@ class PermohonanForm(forms.ModelForm):
 
         labels = {
             'district' : 'Kecamatan',
-            'village': 'Desa'
+            'village': 'Desa',
+            'nik': 'NIB',
+
         }
         widgets = {
             "nama_pemohon": forms.TextInput(attrs={"class": "big-input"}),
@@ -57,28 +59,116 @@ class LayananForm(forms.ModelForm):
         model = Layanan
         fields = ['nama', 'deskripsi']
 
+# class BerkasItemForm(forms.ModelForm):
+#     class Meta:
+#         model = BerkasItem
+#         fields = ['nama', 'layanan', 'catatan']
+#         widgets = {
+#             'catatan': forms.Textarea(attrs={
+#                 'class': 'form-control mb-3',
+#                 'placeholder': 'Tambahkan catatan jika diperlukan...',
+#                 'style': 'height: 120px; resize: vertical;',  
+#             })
+#         }
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.helper = FormHelper()
+#         self.helper.form_method = 'post'
+#         self.helper.layout = Layout(
+#             Row(Column('nama', css_class="mb-3")),
+#             InlineCheckboxes('layanan'),
+#             Row(Column('catatan')),
+#             Submit('submit', 'Simpan', css_class="btn btn-primary"),
+#         )
+
+from django import forms
+from .models import BerkasItem, Layanan
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Row, Column, Submit, HTML
+from crispy_forms.bootstrap import InlineCheckboxes
+
+
 class BerkasItemForm(forms.ModelForm):
+
     class Meta:
         model = BerkasItem
-        fields = ['nama', 'layanan', 'catatan']
+        fields = ['nama','parent','layanan', 'catatan']
         widgets = {
             'catatan': forms.Textarea(attrs={
                 'class': 'form-control mb-3',
                 'placeholder': 'Tambahkan catatan jika diperlukan...',
-                'style': 'height: 120px; resize: vertical;',  
+                'style': 'height: 120px; resize: vertical;',
             })
         }
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.helper = FormHelper()
         self.helper.form_method = 'post'
+
+        # ambil semua layanan dari DB
+        layanan_list = Layanan.objects.all()
+
+        urutan_fields = []
+
+        for layanan in layanan_list:
+            field_name = f"urutan_{layanan.id}"
+
+            # nilai awal (kalau edit)
+            initial_value = None
+            if self.instance.pk:
+                initial_value = self.instance.urutan.get(layanan.nama)
+
+            self.fields[field_name] = forms.IntegerField(
+                label=f"Urutan {layanan.nama}",
+                required=False,
+                min_value=1,
+                widget=forms.NumberInput(attrs={
+                    'class': 'form-control',
+                    'placeholder': f"Nomor untuk {layanan.nama}"
+                }),
+                initial=initial_value
+            )
+
+            urutan_fields.append(
+                Row(Column(field_name, css_class="mb-2"))
+            )
+
         self.helper.layout = Layout(
             Row(Column('nama', css_class="mb-3")),
             InlineCheckboxes('layanan'),
+            HTML("<hr><h6>Urutan Berkas per Layanan</h6>"),
+            *urutan_fields,
             Row(Column('catatan')),
             Submit('submit', 'Simpan', css_class="btn btn-primary"),
         )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        urutan_data = {}
+
+        for layanan in Layanan.objects.all():
+            key = f"urutan_{layanan.id}"
+            nilai = cleaned_data.get(key)
+
+            if nilai:
+                urutan_data[layanan.nama] = nilai
+
+        cleaned_data['urutan'] = urutan_data
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.urutan = self.cleaned_data.get('urutan', {})
+        if commit:
+            instance.save()
+            self.save_m2m()
+        return instance
+
 
 class CatatanTemplateForm(forms.ModelForm):
     class Meta:

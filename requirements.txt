@@ -35,3 +35,6 @@ crispy_bootstrap5
 
 #history
 django-simple-history
+
+#libraryword
+docxtpl

@@ -12,7 +12,7 @@ from xhtml2pdf import pisa
 from .models import Permohonan as Pemohon, BerkasItem, Pemeriksaan, CatatanTemplate, Village
 from django.template.loader import get_template
 import tempfile
-
+from django.db.models import Q
 
 
 
@@ -142,27 +142,102 @@ def detail_pemohon(request, pemohon_id):
     }
     return render(request, "pages/permohonan/detail_pemeriksaan.html", context)
 
+# def print_detail_pemohon(request, pemohon_id):
+#     pemohon = get_object_or_404(Pemohon, id=pemohon_id)
+#     # pemeriksaan_list = Pemeriksaan.objects.filter(
+#     #     pemohon=pemohon
+#     # ).select_related("berkas").prefetch_related("catatan")
+
+#     pemeriksaan_list = (
+#         Pemeriksaan.objects
+#         .filter(pemohon=pemohon)
+#         .filter(
+#             Q(catatan__isnull=False) |
+#             Q(catatan_baru__isnull=False, catatan_baru__gt='')
+#         )
+#         .distinct()
+#         .select_related("berkas")
+#         .prefetch_related("catatan")
+#     )
+
+#     template_path = 'pages/permohonan/print_detail_pemeriksaan.html'
+#     context = {
+#         'pemohon': pemohon,
+#         'pemeriksaan_list': pemeriksaan_list,
+#     }
+
+#     template = get_template(template_path)
+#     html = template.render(context)
+
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = f'inline; filename="pemohon_{pemohon_id}.pdf"'  # 👈 BUKA TAB BARU
+
+#     pisa_status = pisa.CreatePDF(html, dest=response)
+
+#     if pisa_status.err:
+#         return HttpResponse("PDF Error.")
+
+#     return response
+
 def print_detail_pemohon(request, pemohon_id):
     pemohon = get_object_or_404(Pemohon, id=pemohon_id)
-    pemeriksaan_list = Pemeriksaan.objects.filter(
-        pemohon=pemohon
-    ).select_related("berkas").prefetch_related("catatan")
 
-    template_path = 'pages/permohonan/print_detail_pemeriksaan.html'
+    pemeriksaan_list = (
+        Pemeriksaan.objects
+        .filter(pemohon=pemohon)
+        .select_related("berkas", "berkas__parent")
+        .prefetch_related("catatan")
+    )
+
+    layanan_kode = pemohon.layanan.nama
+
+    parent_map = {}
+
+    for p in pemeriksaan_list:
+        berkas = p.berkas
+
+        if berkas.parent:
+            parent = berkas.parent
+        else:
+            parent = berkas
+
+        parent_map.setdefault(parent, {
+            "parent": parent,
+            "subs": [],
+            "pemeriksaan": None
+        })
+
+        if berkas.parent:
+            parent_map[parent]["subs"].append(p)
+        else:
+            parent_map[parent]["pemeriksaan"] = p
+
+    # sorting parent berdasarkan nomor layanan
+
+    parent_items = []
+
+    for data in parent_map.values():
+        parent = data["parent"]
+        nomor = parent.get_urutan(layanan_kode)
+        if nomor != 999:
+            data["nomor"] = nomor
+            parent_items.append(data)
+
+    parent_items.sort(key=lambda x: x["nomor"])
+
     context = {
-        'pemohon': pemohon,
-        'pemeriksaan_list': pemeriksaan_list,
+        "pemohon": pemohon,
+        "parent_items": parent_items,
+        "layanan_kode": layanan_kode,
     }
 
-    template = get_template(template_path)
+    template = get_template(
+        "pages/permohonan/print_detail_pemeriksaan.html"
+    )
     html = template.render(context)
 
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="pemohon_{pemohon_id}.pdf"'  # 👈 BUKA TAB BARU
-
-    pisa_status = pisa.CreatePDF(html, dest=response)
-
-    if pisa_status.err:
-        return HttpResponse("PDF Error.")
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'inline; filename="hasil_pemeriksaan.pdf"'
+    pisa.CreatePDF(html, dest=response)
 
     return response
