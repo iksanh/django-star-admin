@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models import indexes
 from simple_history.models import HistoricalRecords
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -31,7 +33,7 @@ class Regency(models.Model):
     )
     province = models.ForeignKey(
         Province,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         db_column='province_id'
     )
     name = models.CharField(
@@ -51,7 +53,7 @@ class District(models.Model):
     )
     regency = models.ForeignKey(
         Regency,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         db_column='regency_id'
     )
     name = models.CharField(max_length=255)
@@ -69,7 +71,7 @@ class Village(models.Model):
     )
     district = models.ForeignKey(
         District,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         db_column='district_id'
     )
     name = models.CharField(max_length=255)
@@ -88,8 +90,9 @@ class Layanan(models.Model):
     """
     HM / HGB / HGU
     """
-    nama = models.CharField(max_length=100, default='')
-    deskripsi = models.CharField(max_length=100, default='')
+    nama = models.CharField(max_length=100, default='', db_index=True)
+    deskripsi = models.CharField(max_length=255, default='', blank=True)
+
 
     def __str__(self):
         return self.nama
@@ -141,31 +144,38 @@ class Permohonan(models.Model):
     """
     Data pemohon per permohonan layanan.
     """
-    nama_pemohon = models.CharField(max_length=255)
+    nama_pemohon = models.CharField(max_length=255, db_index=True)
     atas_nama = models.CharField(max_length=255, null=True, blank=True)
     nik = models.CharField(max_length=50, null=True, blank=True)
    
     # ganti alamat ke relasi
     district = models.ForeignKey(
         District,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         null=True,
         blank=True
     )
     village = models.ForeignKey(
         Village,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         null=True,
         blank=True
     )
 
-    layanan = models.ForeignKey(Layanan, on_delete=models.CASCADE)
-    tanggal_permohonan = models.DateField()
+    layanan = models.ForeignKey(Layanan, on_delete=models.PROTECT)
+    tanggal_permohonan = models.DateField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     #add history 
     history = HistoricalRecords()
     def __str__(self):
         return f"{self.nama_pemohon} - {self.layanan.nama}"
+    
+    class Meta:
+        indexes = [ models.Index(fields=['nama_pemohon', 'village'])] 
+        
+        # verbose_name_plural = "Permohonan"
+        
 
 class CatatanTemplate(models.Model):
     """
@@ -185,8 +195,31 @@ class Pemeriksaan(models.Model):
     """
     Pemeriksaan berkas per pemohon.
     """
+
+    STATUS_CHOICES = [
+        ('OK', 'Lengkap / Memenuhi Syarat'),
+        ('REVISI', 'Perlu Revisi'),
+        ('TOLAK', 'Ditolak'),
+    ]
     pemohon = models.ForeignKey(Permohonan, on_delete=models.CASCADE)
-    berkas = models.ForeignKey(BerkasItem, on_delete=models.CASCADE)
+    berkas = models.ForeignKey(BerkasItem, on_delete=models.PROTECT)
+
+    # FIELD PENTING YANG KURANG TADI:
+    petugas = models.ForeignKey(
+        User, 
+        on_delete=models.SET_NULL, # Kalau petugas resign/hapus akun, history tetap ada (hanya null)
+        null=True,
+        blank=True,
+        help_text="Petugas yang melakukan verifikasi"
+    )
+
+    status = models.CharField(
+        max_length=10, 
+        choices=STATUS_CHOICES, 
+        default='REVISI',
+        db_index=True
+    )
+    
 
     # Beberapa catatan standar (multiple select)
     catatan = models.ManyToManyField(CatatanTemplate, blank=True)
@@ -194,9 +227,22 @@ class Pemeriksaan(models.Model):
     # Catatan khusus (tidak global)
     catatan_baru = models.TextField(blank=True, null=True)
 
+    file_bukti = models.FileField(
+        upload_to='hasil_pemeriksaan/%Y/%m/', 
+        null=True, 
+        blank=True,
+        help_text="Upload scan jika diperlukan"
+    )
     tanggal_koreksi = models.DateField(auto_now=True)
+    
 
+    
     def __str__(self):
         return f"Pemeriksaan {self.pemohon.nama_pemohon} - {self.berkas.nama}"
+
+    class Meta: 
+        # Constraint: Satu permohonan hanya boleh punya satu record pemeriksaan untuk satu jenis berkas
+        # Mencegah duplikasi data.
+        unique_together = ['pemohon', 'berkas']
 
 

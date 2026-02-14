@@ -12,7 +12,9 @@ from xhtml2pdf import pisa
 from .models import Permohonan as Pemohon, BerkasItem, Pemeriksaan, CatatanTemplate, Village
 from django.template.loader import get_template
 import tempfile
-from django.db.models import Q
+from django.db.models import Q, Count
+from django.utils import timezone
+from .models import Permohonan, Layanan, Pemeriksaan
 
 
 
@@ -20,10 +22,36 @@ from django.db.models import Q
 @login_required
 def index(request):
 
-    # Page from the theme 
+    # 1. Statistik Utama (Cards)
+    total_permohonan = Permohonan.objects.count()
+    
+    # Filter bulan ini (Penting untuk laporan bulanan)
+    now = timezone.now()
+    permohonan_bulan_ini = Permohonan.objects.filter(
+        tanggal_permohonan__year=now.year, 
+        tanggal_permohonan__month=now.month
+    ).count()
+
+    # 2. Statistik per Layanan (Untuk Pie Chart)
+    # Menghasilkan: [{'layanan__nama': 'Hak Milik', 'jumlah': 10}, ...]
+    stats_layanan = Permohonan.objects.values('layanan__nama').annotate(
+        jumlah=Count('id')
+    ).order_by('-jumlah')[:5] # Ambil 5 teratas saja
+
+    # 3. Tabel "Butuh Tindakan Segera" (Recent Activity)
+    # Ambil 5 permohonan terakhir yang masuk
+    recent_permohonan = Permohonan.objects.select_related(
+        'layanan', 'village', 'district'
+    ).order_by('-tanggal_permohonan')[:5]
+
     context = {
-        'segment': 'dashboard'
+        'total_permohonan': total_permohonan,
+        'permohonan_bulan_ini': permohonan_bulan_ini,
+        'stats_layanan': stats_layanan,
+        'recent_permohonan': recent_permohonan,
     }
+
+    
     return render(request, 'pages/index.html', context)
 
 def permohonan(request):
